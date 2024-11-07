@@ -17,9 +17,10 @@ void CPU::loadProgram(const std::vector<string>& program, int startAddress) {
     count = startAddress;
 
 }
+
 void CPU::execute() {
     bool choice = true;
-    cout << "OPERATIONS:-" << endl;
+    cout << "\n_________________________________OPERATIONS:_________________________________" << endl;
     while (choice) {
         // Fetch the opcode from memory using the current program counter (count)
         int opcode1 = mem.getData(count);
@@ -36,22 +37,19 @@ void CPU::execute() {
 
         switch (firstDigit) {
             case 1: // LOAD
-                cout << "-Load operation."<< "\n";
+                cout << "\n-Load operation."<< "\n";
                 instr.executeLoad(reg, regNumber, value,mem);
                 count += 2;
                 break;
 
             case 2: // LOAD immediate
-                cout << "-Load Immediate operation." << "\n";
+                cout << "\n-Load Immediate operation." << "\n";
                 instr.executeLoadImmediate(reg, regNumber , value);
                 count += 2;
                 break;
 
             case 3: // STORE
-                cout << "-Store operation." << "\n";
-
-                // Debugging: Print the opcode
-                cout << "Opcode for STORE operation: " << hex << opcode1 << endl;
+                cout << "\n-Store operation." << "\n";
 
                 // Execute the store operation
                 instr.executeStore(reg, opcode2, regNumber, mem);
@@ -60,50 +58,50 @@ void CPU::execute() {
 
 
             case 4: // MOVE
-                cout << "-Move operation.\n";
+                cout << "\n-Move operation.\n";
                 instr.executeMove(reg, opcode2);
                 count += 2;
                 break;
 
             case 5: // ADD (two's complement)
-                cout << "-Add operation (two's complement).\n";
+                cout << "\n-Add operation (two's complement).\n";
                 alu.executeAddTwosComplement(reg, mem.getData(count), mem.getData(count + 1), opcode1);
                 count += 2;
                 break;
 
             case 6: // ADD (floating point)
-                cout << "-Add operation (floating point).\n";
+                cout << "\n-Add operation (floating point).\n";
                 alu.executeAddFloatingPoint(reg, mem.getData(count), mem.getData(count + 1), opcode1);
                 count += 2;
                 break;
 
             case 7: // OR
-                cout << "-OR operation.\n";
+                cout << "\n-OR operation.\n";
                 instr.executeOr(reg, mem.getData(count), mem.getData(count + 1));
                 count += 2;
                 break;
 
             case 8: // AND
-                cout << "-AND operation\n";
+                cout << "\n-AND operation\n";
                 instr.executeAnd(reg, mem.getData(count), mem.getData(count + 1));
                 count += 2;
                 break;
 
             case 9: // XOR
-                cout << "-XOR operation.\n";
+                cout << "\n-XOR operation.\n";
                 instr.executeXor(reg, mem.getData(count), mem.getData(count + 1));
                 count += 2;
                 break;
 
             case 10: // Rotate Right
-                cout << "-Rotate Right operation.\n";
+                cout << "\n-Rotate Right operation.\n";
                 instr.executeRotateRight(reg, opcode1, rotateSteps);
                 count += 2;
                 break;
 
             case 11: // Conditional Jump (Equal)
-                cout << "-Conditional Jump (Equal)."<< "\n";
-                instr.executeConditionalJump(reg, opcode1, count);
+                cout << "\n-Conditional Jump (Equal)."<< "\n";
+                instr.executeConditionalJump(reg, opcode2, count, mem);
                 continue;  // Skip the normal increment of count to jump to the specified address
 
             case 12:
@@ -111,13 +109,13 @@ void CPU::execute() {
                 break;
 
             case 13: // Conditional Jump (Greater Than)
-                cout << "-Conditional Jump (Greater Than)."<< "\n";
-                instr.executeConditionalJumpGreaterThan(reg, opcode1, count, mem);
-                continue;
+                cout << "\n-Conditional Jump (Greater Than)."<< "\n";
+                instr.executeConditionalJumpGreaterThan(reg, opcode2, count, mem);
+                break;
 
 
             default:
-                cout << "Error! Unrecognized instruction : " << opcode1 << ", at address: " << count << endl;
+                cout << "\nError! Unrecognized instruction : " << opcode1 << ", at address: " << count << endl;
                 choice = false;// Terminate on unknown instruction
                 count += 2; // Move to next instruction
                 break;
@@ -126,7 +124,7 @@ void CPU::execute() {
 }
 
 void CPU::displayStatus(int startAddress) {
-    cout << "___________Register Address___________\n";
+    cout << "_______________________________Register Address_______________________________\n";
 
     // Print header for register addresses
     for (int col = 0; col < 16; col++) {
@@ -149,7 +147,7 @@ void CPU::displayStatus(int startAddress) {
         cout << endl;
     }
 
-    cout << "___________Memory Address___________\n";
+    cout << "________________________________Memory Address________________________________\n";
 
 // Print column headers for 16 addresses in a row
     for (int col = 0; col < 16; col++) {
