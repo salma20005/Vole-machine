@@ -1,0 +1,3 @@
+C:/Users/salma/CLionProjects/A1_T4_S21_20230571_2023119_20230172/cmake-build-debug/CMakeFiles/A1_T4_S21_20230571_2023119_20230172.dir
+C:/Users/salma/CLionProjects/A1_T4_S21_20230571_2023119_20230172/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/salma/CLionProjects/A1_T4_S21_20230571_2023119_20230172/cmake-build-debug/CMakeFiles/rebuild_cache.dir
