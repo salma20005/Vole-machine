@@ -20,7 +20,7 @@ void CPU::loadProgram(const std::vector<string>& program, int startAddress) {
 
 void CPU::execute() {
     bool choice = true;
-    cout << "\n_________________________________OPERATIONS:_________________________________" << endl;
+    cout << "\n____________OPERATIONS:____________" << endl;
     while (choice) {
         // Fetch the opcode from memory using the current program counter (count)
         int opcode1 = mem.getData(count);
@@ -77,19 +77,19 @@ void CPU::execute() {
 
             case 7: // OR
                 cout << "\n-OR operation.\n";
-                instr.executeOr(reg, mem.getData(count), mem.getData(count + 1));
+                instr.executeOr(reg, opcode2, opcode1);
                 count += 2;
                 break;
 
             case 8: // AND
                 cout << "\n-AND operation\n";
-                instr.executeAnd(reg, mem.getData(count), mem.getData(count + 1));
+                instr.executeAnd(reg, opcode2, opcode1);
                 count += 2;
                 break;
 
             case 9: // XOR
                 cout << "\n-XOR operation.\n";
-                instr.executeXor(reg, mem.getData(count), mem.getData(count + 1));
+                instr.executeXor(reg, opcode2, opcode1);
                 count += 2;
                 break;
 
@@ -101,7 +101,7 @@ void CPU::execute() {
 
             case 11: // Conditional Jump (Equal)
                 cout << "\n-Conditional Jump (Equal)."<< "\n";
-                instr.executeConditionalJump(reg, opcode2, count, mem);
+                instr.executeConditionalJump(reg, opcode2, count);
                 continue;  // Skip the normal increment of count to jump to the specified address
 
             case 12:
@@ -124,7 +124,7 @@ void CPU::execute() {
 }
 
 void CPU::displayStatus(int startAddress) {
-    cout << "_______________________________Register Address_______________________________\n";
+    cout << "__________Register Address__________\n";
 
     // Print header for register addresses
     for (int col = 0; col < 16; col++) {
@@ -147,7 +147,7 @@ void CPU::displayStatus(int startAddress) {
         cout << endl;
     }
 
-    cout << "________________________________Memory Address________________________________\n";
+    cout << "___________Memory Address___________\n";
 
 // Print column headers for 16 addresses in a row
     for (int col = 0; col < 16; col++) {
