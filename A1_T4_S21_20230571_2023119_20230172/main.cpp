@@ -43,11 +43,11 @@ void displayInstructions() {
             "[B RXY] Jump to cell XY if content of register R equals content of register 0\n"
             "[C xxx] Halt execution\n"
             "[D RXY] Jump to cell XY if content of register R is greater than content of register 0\n"
-            "______________________________\n";
+            "______________________________________________________________________________________\n";
 }
 
 int main() {
-    cout << "___________Welcome!___________\n";
+    cout << "_________________________________Welcome!_________________________________\n";
     unsigned int startAddress = 0x0A;  // Default starting address 10
     string choice1, choice2, choice3;
 
@@ -109,7 +109,7 @@ int main() {
             cpu.loadProgram(program, startAddress);
             cpu.execute();
             cpu.displayStatus(startAddress);
-            cout << "___________________________\n";
+            cout << "_____________________________________________________________________________\n";
 
         } else if (choice1 == "2") {
             displayInstructions();
