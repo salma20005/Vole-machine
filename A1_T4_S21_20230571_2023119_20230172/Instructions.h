@@ -1,6 +1,5 @@
-
-#ifndef A1_T4_S21_20230571_2023119_20230172_INSTRUCTIONS_H
-#define A1_T4_S21_20230571_2023119_20230172_INSTRUCTIONS_H
+#ifndef untitled11_INSTRUCTIONS_H
+#define untitled11_INSTRUCTIONS_H
 
 #include "Register.h"
 #include "Memory.h"
@@ -18,10 +17,10 @@ public:
     void executeAnd(Register &reg, int opcode1, int opcodeResult);
     void executeXor(Register &reg, int opcode1, int opcodeResult);
     void executeRotateRight(Register &reg, int opcode, int numBits);
-    void executeConditionalJump(Register &reg, int opcode, int &programCounter);
+    void executeConditionalJump(Register &reg, int opcode, int &programCounter, Memory &mem);
     void executeConditionalJumpGreaterThan(Register &reg, int opcode, int &programCounter, Memory &mem);
     bool executeHalt();
 };
 
 
-#endif //A1_T4_S21_20230571_2023119_20230172_INSTRUCTIONS_H
+#endif
