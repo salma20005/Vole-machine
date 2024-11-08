@@ -12,11 +12,6 @@ int extractSourceRegister(int opcode) {
 int extractDestinationRegister(int opcode) {
     return opcode & 0xF;
 }
-int Instructions::extractRegisterNumber(int opcode) {
-    int registerNumber = (opcode >> 4) & 0xF;  // Extract register number from the opcode
-    cout << "Extracted Register Number: " << registerNumber << " from Opcode: " << hex << opcode << endl;
-    return registerNumber;
-}
 
 int Instructions::extractMemoryAddress(int opcode) {
     return opcode & 0xFF;
@@ -37,7 +32,6 @@ void Instructions::executeLoadImmediate(Register& reg, int regNumber , int value
          << " set to " <<hex << uppercase << value << endl;
 }
 
-// 3005
 void Instructions::executeStore(Register &reg, int opcode, int regNumber, Memory &mem) {
     int address = extractMemoryAddress(opcode);
     int dataToStore = reg.getData(regNumber);    // Get the data to be stored from the specified register
@@ -86,53 +80,48 @@ void Instructions::executeXor(Register &reg, int opcode, int opcodeResult) {
 }
 
 void Instructions::executeRotateRight(Register &reg, int opcode, int numBits) {
-    int R = extractSourceRegister(opcode);
+    int R = extractDestinationRegister(opcode);
     unsigned int data = reg.getData(R);
-    int rotatedData = (data >> numBits) | (data << (8 - numBits));
+    numBits %= 8;
+    unsigned int rotatedData = (data >> numBits) | (data << (8 - numBits));
     rotatedData &= 0xFF;  // Ensure it stays within 8 bits
     reg.setData(R, rotatedData);
     cout << "Rotated R" << R << " right by " << numBits << " bits, new value: " << hex << rotatedData << endl;
 }
 
-void Instructions::executeConditionalJump(Register &reg, int opcode, int &programCounter,Memory &mem) {
-    // Extract the register and memory address from the opcode
-    int regAddress = extractSourceRegister(opcode);
-    int memAddress = extractMemoryAddress(opcode);
-    int value1 = reg.getData(regAddress);
-    int value2 = mem.getData(0);
-
-    cout << "Comparing value in register R" << regAddress << " (" << value1 << ") with value at memory address 00 (" << value2 << ")" << endl;
-
-    if (value1 == value2) {
-        programCounter = memAddress;  // Update programCounter to jump to the target address
-        cout << "Jumped to address " << hex << memAddress << " as R" << regAddress << " = M00" << endl;
+void Instructions::executeConditionalJump(Register &reg, int opcode, int &programCounter) {
+    int R = extractSourceRegister(opcode);
+    int address = extractMemoryAddress(opcode);
+    if (reg.getData(R) == reg.getData(0)) {
+        programCounter = address;
+        cout << "Jumped to address " << hex << address << " as R" << R << " == R0" << endl;
     } else {
-        programCounter += 2;  // No jump, proceed to next instruction
+        programCounter += 2;
         cout << "No jump; moved to next instruction" << endl;
     }
 }
 
 void Instructions::executeConditionalJumpGreaterThan(Register &reg, int opcode, int &programCounter, Memory &mem) {
     // Extract the register and memory address from the opcode
-    int regAddress = extractSourceRegister(opcode);
-    int memAddress = extractMemoryAddress(opcode);
-    int value1 = reg.getData(regAddress);
-    int value2 = mem.getData(0);
+    int R = extractSourceRegister(opcode);  // Source register (R)
+    int address = extractMemoryAddress(opcode);  // Target memory address for jump
 
-    cout << "Comparing value in register R" << regAddress << " (" << value1 << ") with value at memory address 00 (" << value2 << ")" << endl;
+    // Sign-extend register values (assumed 8-bit signed)
+    int signedRegValue = (reg.getData(R) & 0x80) ? (reg.getData(R) - 0x100) : reg.getData(R);
+    int signedReg0Value = (reg.getData(0) & 0x80) ? (reg.getData(0) - 0x100) : reg.getData(0);
 
-    if (value1 > value2) {
-        programCounter = memAddress;  // Update programCounter to jump to the target address
-        cout << "Jumped to address " << hex << memAddress << " as R" << regAddress << " > M00" << endl;
+    // Compare R and R0, and decide whether to jump
+    if (signedRegValue > signedReg0Value) {
+        programCounter = address;  // Jump to the specified address
+        cout << "Jumped to address " << hex << address << " as R" << R << " > R0" << endl;
     } else {
         programCounter += 2;  // No jump, proceed to next instruction
         cout << "No jump; moved to next instruction" << endl;
     }
-
 }
 
 
 bool Instructions::executeHalt() {
-    cout << "program stopped due to C000.\n" << endl;
+    cout << "program stopped due to C000." << endl;
     return false;
 }
