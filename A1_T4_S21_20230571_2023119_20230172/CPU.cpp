@@ -27,12 +27,12 @@ void CPU::execute() {
         int opcode2 = mem.getData(count+1);
         int opcode = (opcode1 << 8) | opcode2;  // Shift byte1 to the higher byte and combine with byte2
 
-        int rotateSteps = opcode1 & 0x0F;
+        int rotateSteps = opcode2 & 0x0F;
 
         int firstDigit = (opcode1 & 0xF0) >> 4;// Extract the first hex digit
         if (firstDigit == 0)
             break;
-        int regNumber= opcode1 & 0x0F;
+        int regNumber = opcode1 & 0x0F;     // Extract register number from the lower nibble of opcode1
         int value = mem.getData(count + 1);
 
         switch (firstDigit) {
